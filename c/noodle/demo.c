@@ -34,19 +34,23 @@ bool init()
 			surface = SDL_GetWindowSurface(window);
 		}
 	}
+
+	return success;
 }
 
 bool loadMedia()
 {
 	bool success = true;
-	image = SDL_LoadBMP("graphic.bmp");
+	image = SDL_LoadBMP("image.bmp");
 	if (image == NULL) {
 		error("image", SDL_GetError());
 		success = false;
 	}
+
+	return success;
 }
 
-bool close()
+bool quit()
 {
 	SDL_FreeSurface(surface);
 	surface = NULL;
@@ -57,10 +61,10 @@ bool close()
 int main()
 {
 	if (!init()) {
-		fprintf(stderr, "ERROR: Could not initialize SDL");
+		fprintf(stderr, "ERROR: Could not initialize SDL\n");
 	} else {
 		if (!loadMedia()) {
-			fprintf(stderr, "ERROR: Could not load image");
+			fprintf(stderr, "ERROR: Could not load image\n");
 		} else {
 			SDL_BlitSurface(image, NULL, surface, NULL);
 			SDL_UpdateWindowSurface(window);
@@ -68,6 +72,6 @@ int main()
 		}
 	}
 
-	close();
+	quit();
 	return 0;
 }

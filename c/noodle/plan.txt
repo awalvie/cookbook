@@ -1,0 +1,2 @@
+- First render a white canvas //DONE
+- Poll mouse events

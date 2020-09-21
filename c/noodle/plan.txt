@@ -1,2 +1,3 @@
 - First render a white canvas //DONE
-- Poll mouse events
+- Poll mouse events //DONE
+- Switch to a renderer instead of using surfaces

@@ -1,3 +1,5 @@
 - First render a white canvas //DONE
 - Poll mouse events //DONE
-- Switch to a renderer instead of using surfaces
+- Switch to a renderer instead of using surfaces //DONE
+- Use mouse events to draw to canvas //DONE
+- Re-Work code to remove global variables into a portable structure

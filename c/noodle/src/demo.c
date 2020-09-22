@@ -6,6 +6,7 @@ static int SCREEN_WIDTH = 640;
 static int SCREEN_HEIGHT = 480;
 uint32_t *pixels;
 bool gQuit = false;
+bool leftMouseButtonDown = false;
 
 SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
@@ -29,7 +30,7 @@ int init_array()
 
 	for (i = 0; i < SCREEN_HEIGHT; i++) {
 		for (j = 0; j < SCREEN_WIDTH; j++) {
-			pixels[i * SCREEN_WIDTH +j] = 0xffffff;
+			pixels[i * SCREEN_WIDTH + j] = 0xffffff;
 		}
 	}
 
@@ -90,14 +91,27 @@ void end_loop()
 	gQuit = true;
 }
 
-void handle_mouse(SDL_Event *e)
+void handle_mouse(SDL_Event *event)
 {
 	int mouseX, mouseY;
 
-	switch (e->type) {
+	switch (event->type) {
+	case SDL_QUIT:
+		gQuit = true;
+		break;
+	case SDL_MOUSEBUTTONUP:
+		if (event->button.button == SDL_BUTTON_LEFT)
+			leftMouseButtonDown = false;
+		break;
+	case SDL_MOUSEBUTTONDOWN:
+		if (event->button.button == SDL_BUTTON_LEFT)
+			leftMouseButtonDown = true;
 	case SDL_MOUSEMOTION:
-		SDL_GetMouseState(&mouseX, &mouseY);
-		printf("X: %d\nY: %d\n", mouseX, mouseY);
+		if (leftMouseButtonDown) {
+			int mouseX = event->motion.x;
+			int mouseY = event->motion.y;
+			pixels[mouseY * SCREEN_WIDTH + mouseX] = 0;
+		}
 		break;
 	}
 }
@@ -124,7 +138,9 @@ int main()
 		SDL_UpdateTexture(gTexture, NULL, pixels,
 				  SCREEN_WIDTH * sizeof(uint32_t));
 		while (SDL_PollEvent(&event) != 0) {
-			if (event.type == SDL_MOUSEMOTION) {
+			if (event.type == SDL_MOUSEBUTTONUP ||
+			    event.type == SDL_MOUSEBUTTONDOWN ||
+			    event.type == SDL_MOUSEMOTION) {
 				handle_mouse(&event);
 			} else if (event.type == SDL_KEYDOWN) {
 				handle_keypress(&event);

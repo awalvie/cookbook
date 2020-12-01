@@ -6,7 +6,13 @@ package main
 // very python much wow
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
 	"math"
+	"os"
+	"sort"
+	// "strconv"
+	"strings"
 )
 
 // comments
@@ -165,6 +171,40 @@ func main() {
 	circle := Circle{radius: 2}
 	fmt.Println("Area of rect is", getArea(rect1))
 	fmt.Println("Area of circle is", getArea(circle))
+
+	// ymm python, in c, very cool
+	samp_string := "Hello World"
+	fmt.Println(strings.Contains(samp_string, "lo"))
+	fmt.Println(strings.Index(samp_string, "lo"))
+	fmt.Println(strings.Count(samp_string, "l"))
+	fmt.Println(strings.Replace(samp_string, "l", "x", 3))
+
+	// such string functions, much cool
+	csvString := "1,2,3,4,5,6"
+	fmt.Println(strings.Split(csvString, ","))
+	list_of_chars := []string{"c", "a", "b"}
+	sort.Strings(list_of_chars)
+	fmt.Println("Letters: ", list_of_chars)
+
+	// working with files
+	file, err := os.Create("samp.txt")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	file.WriteString("Such python, much wow")
+	file.Close()
+
+	stream, err := ioutil.ReadFile("samp.txt")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	read_string := string(stream)
+	fmt.Println(read_string)
+	// lots of steps honestly, I'd much rather use something like with open
 
 }
 

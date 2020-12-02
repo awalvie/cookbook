@@ -204,7 +204,7 @@ func main() {
 
 	read_string := string(stream)
 	fmt.Println(read_string)
-	// lots of steps honestly, I'd much rather use something like with open
+	// lots of steps honestly, I'd much rather use something like `with open`
 
 }
 

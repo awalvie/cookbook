@@ -1,4 +1,4 @@
-#Practising Go
+# Practising Go
 
 Gophercises is a free course that teaches you Go by building side projects. I'm going to be using Go at my intern and my colleagues suggested this to get me going.
 

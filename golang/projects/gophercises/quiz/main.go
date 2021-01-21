@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 )
 
 type Problem struct {
@@ -43,29 +44,43 @@ func parseLines(records [][]string) []Problem {
 	return problems
 }
 
-func playQuiz(problems []Problem) int {
+func playQuiz(problems []Problem, timeLimit int) int {
 
 	correct := 0
+	timer := time.NewTimer(time.Duration(timeLimit) * time.Second)
 
 	for i, problem := range problems {
 		fmt.Printf("Question %d is: %s = ", i+1, problem.question)
-		var answer string
-		fmt.Scanf("%s\n", &answer)
-		if answer == problem.answer {
-			correct = correct + 1
-			fmt.Println("Correct Answer!")
-		} else {
-			fmt.Println("Oof, incorrect.")
+		answerCh := make(chan string)
+
+		go func() {
+			var answer string
+			fmt.Scanf("%s\n", &answer)
+			answerCh <- answer
+		}()
+
+		select {
+		case <-timer.C:
+			fmt.Printf("Oof, you ran out of time! You answered a total of %d out of %d questions\n", correct, len(problems))
+			os.Exit(0)
+		case answer := <-answerCh:
+			if answer == problem.answer {
+				correct = correct + 1
+				fmt.Println("Correct Answer!")
+			} else {
+				fmt.Println("Oof, incorrect.")
+			}
 		}
 	}
 
 	return correct
 
 }
+
 func main() {
 	// options for cli
 	problemsPtr := flag.String("csv", "problems.csv", "a csv file in the format of 'question,answer'")
-	// limitPtr := flag.Int("limit", 30, "the time limit for the quiz in seconds")
+	limitPtr := flag.Int("limit", 30, "the time limit for the quiz in seconds")
 
 	// usage message that is rendered when -h|--help is used
 	flag.Usage = func() {
@@ -82,6 +97,6 @@ func main() {
 	questions := parseLines(records)
 
 	// let the quiz begin
-	playQuiz(questions)
+	playQuiz(questions, *limitPtr)
 
 }
